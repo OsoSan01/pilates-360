@@ -1,67 +1,58 @@
 import React from "react";
-import {Form, Input, Button} from 'antd' //always rememeber to import whatever will be used from antd
-import { Component } from 'react';
-// import { signUp } from '../../utilities/users-service';
+import {Alert, Form, Input, Button, Typography} from 'antd' //always rememeber to import whatever will be used from antd
+import { Link } from "react-router-dom";
 
-export default class Register extends Component {
-  state = {
-    name: '',
-    email: '',
-    password: '',
-    confirm: '',
-    error: ''
-  };
 
-//   handleChange = (evt) => {
-//     this.setState({
-//       [evt.target.name]: evt.target.value,
-//       error: ''
-//     });
-//   };
 
-//   handleSubmit = async (evt) => {
-//     evt.preventDefault();
-//     try {
-//       const {name, email, password} = this.state;
-//       const formData = {name, email, password};
-//       // The promise returned by the signUp service
-//       // method will resolve to the user object included
-//       // in the payload of the JSON Web Token (JWT)
-//       const user = await signUp(formData);
-//       this.props.setUser(user);
-//     } catch {
-//       // An error occurred
-//       // Probably due to a duplicate email
-//       this.setState({ error: 'Sign Up Failed - Try Again' });
-//     }
-//   };
+export default function Register () {
 
-  render() {
-    const disable = this.state.password !== this.state.confirm;
+    const onFinish = (values) => {
+        console.log('Received values of form', values)
+    }
+
+    const [form] = Form.useForm();
+
     return (
       <div className="register">
-        <div className="register-form card p-2">
+        <div className="register-form card p-4">
+        <img className='brand mb-4' src='https://pilates360.com.au/wp-content/uploads/2021/04/300px-p360-black-no-text.png'/>
             <h1 className="card-title">Nice to meet you!</h1>
-          <Form layout='vertical' autoComplete="off" onSubmit={this.handleSubmit}>
-            <Form.Item label='Name' name='name' >
-                <Input placeholder='Name' value={this.state.name} onChange={this.handleChange} required />
+          <Form form={form} layout='vertical' autoComplete="off" onFinish={onFinish} name='dependencies'>
+            <Form.Item label='Name' name='name' rules={[{ required: true }]}>
+                <Input placeholder='Name'  />
             </Form.Item>
-            <Form.Item label='Email' name='email' >
-                <Input placeholder="Email" value={this.state.email} onChange={this.handleChange} required />
+            <Form.Item label='Email' name='email' rules={[{ required: true, type: 'email' }]} >
+                <Input placeholder="Email" />
             </Form.Item>
-            <Form.Item label='Password' name='password' >
-                <Input placeholder="Password" value={this.state.password} onChange={this.handleChange} required />
+            <Form.Item label='Password' name='password' rules={[{ required: true }]} >
+                <Input placeholder="Password" type='password' />
             </Form.Item>
-            <Form.Item label='Confirm' name='confirm' >
-                <Input placeholder="confirm" value={this.state.confirm} onChange={this.handleChange} required />
-            </Form.Item>
+            <Form.Item
+        label="Confirm Password"
+        name="password2"
+        dependencies={['password']}
+        rules={[
+          {
+            required: true,
+          },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('The new password that you entered do not match!'));
+            },
+          }),
+        ]}
+      >
+        <Input placeholder="Confirm Password" type='password' />
+      </Form.Item>
             <div>
-            <Button type="submit" disabled={disable}>SIGN UP</Button>
+            <Button className='primary-button mt-4 mb-3' htmlType="submit" >SIGN UP!</Button>
+            <Link className="anchor" to="/login">CLICK HERE TO LOG IN</Link>
             </div>
           </Form>
         </div>
-        <p className="error-message">&nbsp;{this.state.error}</p>
       </div>
     );
-  }
-}
+  };
