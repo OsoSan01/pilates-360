@@ -1,13 +1,30 @@
 import React from "react";
-import {Alert, Form, Input, Button, Typography} from 'antd' //always rememeber to import whatever will be used from antd
-import { Link } from "react-router-dom";
+import {Form, Input, Button} from 'antd' //always rememeber to import whatever will be used from antd
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 
-export default function Login () {
 
-    const onFinish = (values) => {
-        console.log('Received values of form', values)
+export default function Login() {
+  //hook to redirect after succesfull login
+    const navigate = useNavigate
+    const onFinish = async (values) => {
+      try {
+        const response = await axios.post('/api/users/login', values);
+        if (response.data.success) {
+            toast.success(response.data.message); //rendering success register message
+            toast('Redirecting to Home Page') //rendering redirect message
+            localStorage.setItem('token', response.data.data);
+            navigate('/'); //redirect to homepage after successful login
+        }else {
+            toast.error(response.data.message); //rendering not success register message
+        }
+    } catch(error) {
+      console.log('wtf is happening')
+        toast.error('Is this the error??.')
     }
+}
 
     return (
       <div className="register">
