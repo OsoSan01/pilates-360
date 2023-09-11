@@ -6,8 +6,10 @@ const jwt = require('jsonwebtoken');
 module.exports = {
   create,
   login,
+  checkToken
 };
 
+// CREATE USER LOGIC //
 
 //different way to create the user.
 //creation and hashing of the password inside this controller.
@@ -35,6 +37,8 @@ async function create(req, res) {
   }
 }
 
+// LOGIN LOGIC //
+
 async function login(req, res) {
   try {
     //check if the email exists, then go with the rest of the functionality
@@ -59,7 +63,32 @@ async function login(req, res) {
       res.status(200).send({ message: 'Login Successfull. Welcome Back!', success: true, data:token });
     }
   } catch (error) {
-    console.log("wtf")
+    console.log("problem with log in logic")
     res.status(500).send({ message: "Error Loggin In. Please Try Agin or Contact Administrator.", succes: false, error});
   }
 };
+
+
+// CHECK TOKEN LOGIC//
+async function checkToken(req, res) {
+  try{
+    const user = await User.findOne({ _id: req.body.userId });
+    console.log(user)
+    if (!user){
+      return res
+      .status(200)
+      .send({ message: 'User Does Not Exist', success: false});
+    }else{
+      res
+      .status(200)
+      .send({ success: true, data: {
+        name: user.name,
+        email: user.email,
+      }})
+    }
+  } catch (error) {
+    res
+    .status(500)
+    .send({ message: "Error Getting User Info", success: false, error})
+  }
+}

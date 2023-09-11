@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default function Login() {
   //hook to redirect after succesfull login
-    const navigate = useNavigate
+    const navigate = useNavigate();
     const onFinish = async (values) => {
       try {
         const response = await axios.post('/api/users/login', values);
@@ -22,9 +22,9 @@ export default function Login() {
         }
     } catch(error) {
       console.log('wtf is happening')
-        toast.error('Is this the error??.')
+        toast.error('Is this the error??')
     }
-}
+};
 
     return (
       <div className="register">

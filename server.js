@@ -19,7 +19,7 @@ app.use(express.json());
 
 //middleware to check and verify  a jwt and
 //assign user object from the jwt to req.user
-// app.use(require('./config/checkToken'));
+app.use(require('./config/checkToken'));
  
 
 const port = process.env.PORT || 3001;

@@ -6,11 +6,11 @@ import toast from 'react-hot-toast';
 
 
 
-
 export default function Register () {
     
     //adding a hook for after the registration
     const navigate = useNavigate();
+    
     //connection the api here
     const onFinish = async(values) => {
         try {
